@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AboutMe</string>
+    <string name="name">Angus Doherty</string>
+    <string name="yellow_star">Yellow star</string>
+    <string name="bio">Hello, my name is Angus.
+        \n\nI am a Data Scientist.\n\nI am learning to make apps, so I can develop an app that notifies you with location based facts and trivia.
+        \nI want the facts to be crowd sourced, allowing users to add their own facts about their hometown, and upvote/downvote other facts.
+        \nUsers can try to "collect" as many facts as possible!
+        \n\nIf I ever actually get around to developing it, I\'ll update this bio!
+        \n\nFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFiller
+        \n\nFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFiller
+        \n\nFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFillerFiller</string>
+    <string name="what_is_your_nickname">What is your Nickname?</string>
+    <string name="done">Done</string>
+</resources>
