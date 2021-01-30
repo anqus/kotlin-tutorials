@@ -33,9 +33,6 @@ import com.example.android.guesstheword.databinding.GameFragmentBinding
 /**
  * Fragment where the game is played
  */
-
-
-
 class GameFragment : Fragment() {
 
     private lateinit var binding: GameFragmentBinding
@@ -52,28 +49,25 @@ class GameFragment : Fragment() {
                 container,
                 false
         )
-
         Log.i("GameFragment", "Called ViewModelProvider.get")
+
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
         // Set the viewmodel for databinding - this allows the bound layout access
-        // to all the data in the ViewModel
+        // to all the data in the VieWModel
         binding.gameViewModel = viewModel
+
         // Specify the fragment view as the lifecycle owner of the binding.
         // This is used so that the binding can observe LiveData updates
         binding.lifecycleOwner = viewLifecycleOwner
 
-        // Observer for the Game Finished event
+        // Observer for the Game finished event
         viewModel.eventGameFinish.observe(viewLifecycleOwner, Observer<Boolean> { hasFinished ->
             if (hasFinished) gameFinished()
         })
 
         return binding.root
-
     }
-
-
-    /** Methods for updating the UI **/
 
     private fun gameFinished() {
         Toast.makeText(activity, "Game has just finished", Toast.LENGTH_SHORT).show()
