@@ -39,10 +39,15 @@ class SleepNightAdapter(val clickListener: SleepNightListener):
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
-            is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
-            is DataItem.SleepNightItem -> ITEM_VIEW_TYPE_ITEM
+    fun addHeaderAndSubmitList(list: List<SleepNight>?) {
+        adapterScope.launch {
+            val items = when (list) {
+                null -> listOf(DataItem.Header)
+                else -> listOf(DataItem.Header) + list.map { DataItem.SleepNightItem(it) }
+            }
+            withContext(Dispatchers.Main) {
+                submitList(items)
+            }
         }
     }
 
@@ -63,15 +68,10 @@ class SleepNightAdapter(val clickListener: SleepNightListener):
         }
     }
 
-    fun addHeaderAndSubmitList(list: List<SleepNight>?) {
-        adapterScope.launch {
-            val items = when (list) {
-                null -> listOf(DataItem.Header)
-                else -> listOf(DataItem.Header) + list.map {DataItem.SleepNightItem(it)}
-            }
-            withContext(Dispatchers.Main) {
-                submitList(items)
-            }
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
+            is DataItem.SleepNightItem -> ITEM_VIEW_TYPE_ITEM
         }
     }
 
@@ -85,13 +85,13 @@ class SleepNightAdapter(val clickListener: SleepNightListener):
         }
     }
 
-    class ViewHolder private constructor(val binding: ListItemSleepNightBinding):
-            RecyclerView.ViewHolder(binding.root){
+
+    class ViewHolder private constructor(val binding: ListItemSleepNightBinding) : RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: SleepNight, clickListener: SleepNightListener) {
             binding.sleep = item
-            binding.executePendingBindings()
             binding.clickListener = clickListener
+            binding.executePendingBindings()
         }
 
         companion object {
@@ -104,9 +104,7 @@ class SleepNightAdapter(val clickListener: SleepNightListener):
     }
 }
 
-
 class SleepNightDiffCallback : DiffUtil.ItemCallback<DataItem>() {
-
     override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
         return oldItem.id == newItem.id
     }
@@ -116,12 +114,13 @@ class SleepNightDiffCallback : DiffUtil.ItemCallback<DataItem>() {
     }
 }
 
+
 class SleepNightListener(val clickListener: (sleepId: Long) -> Unit) {
     fun onClick(night: SleepNight) = clickListener(night.nightId)
 }
 
+
 sealed class DataItem {
-    abstract val id: Long
     data class SleepNightItem(val sleepNight: SleepNight): DataItem() {
         override val id = sleepNight.nightId
     }
@@ -129,4 +128,7 @@ sealed class DataItem {
     object Header: DataItem() {
         override val id = Long.MIN_VALUE
     }
+
+    abstract val id: Long
 }
+

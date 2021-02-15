@@ -16,12 +16,10 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
-import android.icu.text.Transliterator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -73,10 +71,11 @@ class SleepTrackerFragment : Fragment() {
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
         val adapter = SleepNightAdapter(SleepNightListener { nightId ->
-            Toast.makeText(context, "${nightId}", Toast.LENGTH_LONG).show()
+            //Toast.makeText(context, "${nightId}", Toast.LENGTH_LONG).show()
             sleepTrackerViewModel.onSleepNightClicked(nightId)
         })
         binding.sleepList.adapter = adapter
+
 
         sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -90,10 +89,10 @@ class SleepTrackerFragment : Fragment() {
 
         // Add an Observer on the state variable for showing a Snackbar message
         // when the CLEAR button is pressed.
-        sleepTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
+        sleepTrackerViewModel.showSnackBarEvent.observe(this, Observer {
             if (it == true) { // Observed state is true.
                 Snackbar.make(
-                        requireActivity().findViewById(android.R.id.content),
+                        activity!!.findViewById(android.R.id.content),
                         getString(R.string.cleared_message),
                         Snackbar.LENGTH_SHORT // How long to display the message.
                 ).show()
@@ -104,7 +103,7 @@ class SleepTrackerFragment : Fragment() {
         })
 
         // Add an Observer on the state variable for Navigating when STOP button is pressed.
-        sleepTrackerViewModel.navigateToSleepQuality.observe(viewLifecycleOwner, Observer { night ->
+        sleepTrackerViewModel.navigateToSleepQuality.observe(this, Observer { night ->
             night?.let {
                 // We need to get the navController from this, because button is not ready, and it
                 // just has to be a view. For some reason, this only matters if we hit stop again
@@ -122,8 +121,10 @@ class SleepTrackerFragment : Fragment() {
             }
         })
 
-        sleepTrackerViewModel.navigateToSleepDetail.observe(viewLifecycleOwner, Observer { night ->
+        // Add an Observer on the state variable for Navigating when and item is clicked.
+        sleepTrackerViewModel.navigateToSleepDetail.observe(this, Observer { night ->
             night?.let {
+
                 this.findNavController().navigate(
                         SleepTrackerFragmentDirections
                                 .actionSleepTrackerFragmentToSleepDetailFragment(night))
@@ -133,11 +134,13 @@ class SleepTrackerFragment : Fragment() {
 
         val manager = GridLayoutManager(activity, 3)
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int) = when(position) {
+            override fun getSpanSize(position: Int) =  when (position) {
                 0 -> 3
                 else -> 1
             }
         }
+
+
         binding.sleepList.layoutManager = manager
 
         return binding.root

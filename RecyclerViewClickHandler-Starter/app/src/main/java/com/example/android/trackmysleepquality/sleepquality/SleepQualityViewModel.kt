@@ -65,6 +65,8 @@ class SleepQualityViewModel(
      */
     fun onSetSleepQuality(quality: Int) {
         viewModelScope.launch {
+            // IO is a thread pool for running operations that access the disk, such as
+            // our Room database.
             val tonight = database.get(sleepNightKey)
             tonight.sleepQuality = quality
             database.update(tonight)

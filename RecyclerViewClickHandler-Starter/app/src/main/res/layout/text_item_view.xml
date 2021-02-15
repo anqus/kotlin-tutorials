@@ -14,7 +14,6 @@
   ~ limitations under the License.
   -->
 
-
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:textSize="24sp"
     android:paddingStart="16dp"
