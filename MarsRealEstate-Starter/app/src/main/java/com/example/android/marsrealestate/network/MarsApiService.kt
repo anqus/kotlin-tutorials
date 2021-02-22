@@ -29,7 +29,6 @@ enum class MarsApiFilter(val value: String) {
     SHOW_BUY("buy"),
     SHOW_ALL("all") }
 
-
 private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com/"
 
 /**
@@ -54,8 +53,7 @@ private val retrofit = Retrofit.Builder()
  */
 interface MarsApiService {
     /**
-     * Returns a Coroutine [List] of [MarsProperty] which can be fetched with await() if
-     * in a Coroutine scope.
+     * Returns a Coroutine [List] of [MarsProperty] which can be fetched in a Coroutine scope.
      * The @GET annotation indicates that the "realestate" endpoint will be requested with the GET
      * HTTP method
      */
