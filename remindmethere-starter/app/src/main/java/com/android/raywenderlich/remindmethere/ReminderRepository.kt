@@ -33,6 +33,7 @@ package com.android.raywenderlich.remindmethere
 import android.Manifest
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
 import com.google.android.gms.location.Geofence
@@ -79,7 +80,7 @@ class ReminderRepository(private val context: Context) {
               }
               // 4
               .addOnFailureListener {
-                failure("Error")
+                failure(GeofenceErrorMessages.getErrorString(context, it))
               }
     }
   }
@@ -87,9 +88,15 @@ class ReminderRepository(private val context: Context) {
   fun remove(reminder: Reminder,
              success: () -> Unit,
              failure: (error: String) -> Unit) {
-    val list = getAll() - reminder
-    saveAll(list)
-    success()
+    geofencingClient
+            .removeGeofences(listOf(reminder.id))
+            .addOnSuccessListener {
+              saveAll(getAll() - reminder)
+              success()
+            }
+            .addOnFailureListener {
+              failure(GeofenceErrorMessages.getErrorString(context, it))
+            }
   }
 
   private fun saveAll(list: List<Reminder>) {
